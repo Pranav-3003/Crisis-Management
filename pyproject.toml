@@ -1,0 +1,8 @@
+[project]
+name = "crisis-management-openenv"
+version = "0.1.0"
+description = "AI Crisis Management OpenEnv Environment"
+authors = ["Pranav"]
+
+[tool.openenv]
+entrypoint = "inference.py"
