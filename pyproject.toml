@@ -1,8 +1,7 @@
 [project]
 name = "crisis-management-openenv"
 version = "0.1.0"
-description = "AI Crisis Management OpenEnv Environment"
-authors = ["Pranav"]
+
 dependencies = [
     "fastapi",
     "uvicorn",
@@ -12,4 +11,4 @@ dependencies = [
 ]
 
 [project.scripts]
-server = "server.app:app"
+server = "server.app:main"
