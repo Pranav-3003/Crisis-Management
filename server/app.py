@@ -8,8 +8,7 @@ env = CrisisEnv()
 
 @app.post("/reset")
 def reset():
-    state = env.reset()
-    return state
+    return env.reset()
 
 @app.post("/step")
 def step(action: Action):

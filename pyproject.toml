@@ -3,6 +3,13 @@ name = "crisis-management-openenv"
 version = "0.1.0"
 description = "AI Crisis Management OpenEnv Environment"
 authors = ["Pranav"]
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "numpy",
+    "openenv>=0.2.0"
+]
 
-[tool.openenv]
-entrypoint = "inference.py"
+[project.scripts]
+server = "server.app:app"
