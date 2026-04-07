@@ -18,9 +18,6 @@ class Observation(BaseModel):
     resources: Resource
 
 class Action(BaseModel):
-    action_type: str  # dispatch / ignore / verify
+    action_type: str
     resource: str
     target: str
-
-class Reward(BaseModel):
-    score: float

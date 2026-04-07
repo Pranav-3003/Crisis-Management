@@ -1,10 +1,10 @@
-from models import Incident, Resource, Observation, Action
+from models import Incident, Resource
 
 def generate_incidents():
     return [
         Incident(type="Fire", severity=0.8, location="Zone A", is_real=True),
         Incident(type="Medical", severity=0.6, location="Zone B", is_real=True),
-        Incident(type="Robbery", severity=0.7, location="Zone C", is_real=False), # Fake alert
+        Incident(type="Robbery", severity=0.7, location="Zone C", is_real=False),
     ]
 
 class CrisisEnv:
@@ -16,74 +16,41 @@ class CrisisEnv:
     def reset(self):
         self.time = 0
         self.incidents = generate_incidents()
-        # Initial resources
         self.resources = Resource(ambulance=3, fire_truck=2, police=4)
         return self.state()
 
     def state(self):
-        return Observation(
-            time=self.time,
-            incidents=self.incidents,
-            resources=self.resources
-        )
+        return {
+            "time": self.time,
+            "incidents": [
+                {
+                    "type": i.type,
+                    "severity": i.severity,
+                    "location": i.location,
+                    "is_real": i.is_real
+                } for i in self.incidents
+            ],
+            "resources": {
+                "ambulance": self.resources.ambulance,
+                "fire_truck": self.resources.fire_truck,
+                "police": self.resources.police
+            }
+        }
 
-    def step(self, action: Action):
+    def step(self, action):
         reward = 0
-        optimal_allocation = False
-        correct_response = False
-        delayed = False
-        resource_wasted = False
-        ignored_real_emergency = False
 
-        if action.action_type == "dispatch":
-            for incident in self.incidents:
-                if incident.location == action.target:
+        for incident in self.incidents:
+            if incident.location == action.target:
+                if action.action_type == "dispatch":
                     if incident.is_real:
                         reward += 10
-                        correct_response = True
-                        if action.resource == "ambulance" and incident.type == "Medical":
-                            optimal_allocation = True
-                            self.resources.ambulance -= 1
-                        elif action.resource == "fire_truck" and incident.type == "Fire":
-                            optimal_allocation = True
-                            self.resources.fire_truck -= 1
-                        elif action.resource == "police" and incident.type == "Robbery":
-                            optimal_allocation = True
-                            self.resources.police -= 1
-                        else:
-                            resource_wasted = True
-                        self.incidents.remove(incident)
                     else:
                         reward -= 5
-                        resource_wasted = True
-                        self.incidents.remove(incident)
+                    self.incidents.remove(incident)
                     break
 
-        elif action.action_type == "ignore":
-            for incident in self.incidents:
-                if incident.location == action.target:
-                    if incident.is_real:
-                        ignored_real_emergency = True
-                        reward -= 10
-                        self.incidents.remove(incident)
-                    else:
-                        reward += 5 # Correctly ignoring a fake alert
-                        self.incidents.remove(incident)
-
-        elif action.action_type == "verify":
-            # Just spends time but we gain knowledge maybe?
-            delayed = True
-
-        # Custom smart rewards
-        if optimal_allocation:
-            reward += 5
-        if delayed:
-            reward -= 2
-        if resource_wasted:
-            reward -= 5
-        
         self.time += 1
-        done = self.time > 20 or len(self.incidents) == 0
+        done = self.time > 10 or len(self.incidents) == 0
 
-        # Phase 4 smarter reward
-        return self.state(), reward, done, {}
+        return self.state(), float(reward), bool(done), {}

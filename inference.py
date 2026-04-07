@@ -5,26 +5,24 @@ def run():
     env = CrisisEnv()
     state = env.reset()
 
+    total_reward = 0
     done = False
 
     while not done:
-        # simple baseline logic
-        if len(state.incidents) > 0:
-            action = Action(
-                action_type="dispatch",
-                resource="ambulance",
-                target="Zone A"
-            )
-        else:
-            action = Action(
-                action_type="ignore",
-                resource="",
-                target=""
-            )
+        action = Action(
+            action_type="dispatch",
+            resource="ambulance",
+            target="Zone A"
+        )
 
         state, reward, done, _ = env.step(action)
+        total_reward += reward
 
-    return {"status": "success"}
+    return {
+        "status": "completed",
+        "total_reward": float(total_reward)
+    }
 
 if __name__ == "__main__":
-    print(run())
+    result = run()
+    print(result)

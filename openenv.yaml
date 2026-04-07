@@ -1,14 +1,5 @@
 name: crisis-management-env
-version: 1.0
-
-observation_space:
-  type: Observation
-
-action_space:
-  type: Action
-
-reward:
-  range: [0, 1]
+entrypoint: inference.py
 
 tasks:
   - easy
