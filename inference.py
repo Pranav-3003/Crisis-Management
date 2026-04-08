@@ -1,11 +1,14 @@
 from env import CrisisEnv
 from models import Action
 
-def run():
+def run_task(task_name):
     env = CrisisEnv()
     state = env.reset()
 
+    print(f"[START] task={task_name}", flush=True)
+
     total_reward = 0
+    step_count = 0
     done = False
 
     while not done:
@@ -16,13 +19,18 @@ def run():
         )
 
         state, reward, done, _ = env.step(action)
+
+        step_count += 1
         total_reward += reward
 
-    return {
-        "status": "completed",
-        "total_reward": float(total_reward)
-    }
+        print(f"[STEP] step={step_count} reward={float(reward)}", flush=True)
+
+    score = total_reward / 100  # normalize
+
+    print(f"[END] task={task_name} score={float(score)} steps={step_count}", flush=True)
+
 
 if __name__ == "__main__":
-    result = run()
-    print(result)
+    run_task("easy")
+    run_task("medium")
+    run_task("hard")
