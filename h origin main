@@ -1,9 +1,0 @@
-[33m5387a7d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m final phase 2 fix
-[33mc817dff[m[33m ([m[1;31morigin/main[m[33m, [m[1;31mgithub/main[m[33m)[m final fix: added main() entrypoint
-[33m33f70cb[m added uv.lock
-[33m08a19d1[m added pyproject.toml for openenv validation
-[33m79d59e5[m added fastapi app
-[33m020f529[m final working openenv version
-[33m1f71630[m added full project files
-[33m984d522[m added full project files
-[33ma2417e0[m initial commit
